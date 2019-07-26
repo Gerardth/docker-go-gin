@@ -4,20 +4,21 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"context"
+	"database/sql"
+	"fmt"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/gin-gonic/gin"
 
 	_ "github.com/denisenkom/go-mssqldb"
 )
 
-// Product type
-type Product struct {
-	ID    uint   `json:”id”`
-	Code  string `json:”code”`
-	Price uint   `json:”price”`
-}
+var db *sql.DB
+var server = "backofficedb"
+var port = 1433
+var user = "backoffice"
+var password = "D4t4c3nt3rCl0ud"
+var database = "backofficeDB"
 
 func main() {
 
@@ -58,38 +59,32 @@ func main() {
 
 func GetProducts(c *gin.Context) {
 	//Modificado para conectar con base de datos SQL Server
-	var db *sql.DB
-	var server = "backofficedb"
-	var port = 1433
-	var user = "backoffice"
-	var password = "D4t4c3nt3rCl0ud"
-	var database = "backofficeDB"
 
 	// Build connection string
-    connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;",
-        server, user, password, port, database)
+	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;",
+		server, user, password, port, database)
 
-    var err error
+	var err error
 
-    // Create connection pool
-    db, err = sql.Open("sqlserver", connString)
-    if err != nil {
-        log.Fatal("Error creating connection pool: ", err.Error())
-    }
-    ctx := context.Background()
-    err = db.PingContext(ctx)
-    if err != nil {
-        log.Fatal(err.Error())
-    }
+	// Create connection pool
+	db, err = sql.Open("sqlserver", connString)
+	if err != nil {
+		log.Fatal("Error creating connection pool: ", err.Error())
+	}
+	ctx := context.Background()
+	err = db.PingContext(ctx)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 	fmt.Printf("Connected!\n")
-	
+
 	// Read employees
-    count, err := ReadEmployees()
-    if err != nil {
-        log.Fatal("Error reading Employees: ", err.Error())
-    }
-    fmt.Printf("Read %d row(s) successfully.\n", count)
-	
+	count, err := ReadEmployees()
+	if err != nil {
+		log.Fatal("Error reading Employees: ", err.Error())
+	}
+	fmt.Printf("Read %d row(s) successfully.\n", count)
+
 }
 
 func ReadEmployees() (int, error) {
@@ -130,4 +125,3 @@ func ReadEmployees() (int, error) {
 
 	return count, nil
 }
-
