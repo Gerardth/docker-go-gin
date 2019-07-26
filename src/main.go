@@ -89,44 +89,45 @@ func GetProducts(c *gin.Context) {
         log.Fatal("Error reading Employees: ", err.Error())
     }
     fmt.Printf("Read %d row(s) successfully.\n", count)
+	
+}
 
-	func ReadEmployees() (int, error) {
-		ctx := context.Background()
-	
-		// Check if database is alive.
-		err := db.PingContext(ctx)
-		if err != nil {
-			return -1, err
-		}
-	
-		tsql := fmt.Sprintf("SELECT Id, Name, Location FROM SalesLT.Employees;")
-	
-		// Execute query
-		rows, err := db.QueryContext(ctx, tsql)
-		if err != nil {
-			return -1, err
-		}
-	
-		defer rows.Close()
-	
-		var count int
-	
-		// Iterate through the result set.
-		for rows.Next() {
-			var name, location string
-			var id int
-	
-			// Get values from row.
-			err := rows.Scan(&id, &name, &location)
-			if err != nil {
-				return -1, err
-			}
-	
-			fmt.Printf("ID: %d, Name: %s, Location: %s\n", id, name, location)
-			count++
-		}
-	
-		return count, nil
+func ReadEmployees() (int, error) {
+	ctx := context.Background()
+
+	// Check if database is alive.
+	err := db.PingContext(ctx)
+	if err != nil {
+		return -1, err
 	}
+
+	tsql := fmt.Sprintf("SELECT Id, Name, Location FROM SalesLT.Employees;")
+
+	// Execute query
+	rows, err := db.QueryContext(ctx, tsql)
+	if err != nil {
+		return -1, err
+	}
+
+	defer rows.Close()
+
+	var count int
+
+	// Iterate through the result set.
+	for rows.Next() {
+		var name, location string
+		var id int
+
+		// Get values from row.
+		err := rows.Scan(&id, &name, &location)
+		if err != nil {
+			return -1, err
+		}
+
+		fmt.Printf("ID: %d, Name: %s, Location: %s\n", id, name, location)
+		count++
+	}
+
+	return count, nil
 }
 
