@@ -86,7 +86,7 @@ func defineEndpointsAndRunApp() {
 }
 
 func GetEmployees(c *gin.Context) {
-	//Modificado para conectar con base de datos SQL Server
+	//Modificado para conectar con base de datos Microsoft SQL Server
 
 	// Read employees
 	var employees []Employee
